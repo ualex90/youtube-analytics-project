@@ -9,7 +9,11 @@ packages = [{include = "youtube_analytics_project"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 google-api-python-client = "^2.94.0"
+pytest = "^7.4.0"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
