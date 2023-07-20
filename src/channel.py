@@ -17,7 +17,7 @@ class Channel:
         Дальше все данные будут подтягиваться по API.
         """
         self.channel_id = channel_id
-        self.info = Channel.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
+        self.info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
 
     def print_info(self) -> None:
         """
