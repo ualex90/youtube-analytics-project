@@ -81,8 +81,9 @@ class Channel:
         else:
             file_name = name
 
-        if os.path.exists(file_name):
+        if os.path.exists(Path(FIXTURES, file_name)):
             with open(Path(FIXTURES, file_name), 'w', encoding='utf-8') as f:
                 json.dump(self.info, f, ensure_ascii=False, indent=4)
-        with open(Path(FIXTURES, file_name), 'a', encoding='utf-8') as f:
-            json.dump(self.info, f, ensure_ascii=False, indent=4)
+        else:
+            with open(Path(FIXTURES, file_name), 'a', encoding='utf-8') as f:
+                json.dump(self.info, f, ensure_ascii=False, indent=4)
