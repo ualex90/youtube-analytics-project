@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 from googleapiclient.discovery import build
@@ -74,16 +73,18 @@ class Channel:
         Сохраняет информацию о канале в файл в папке fixtures.
         Если файл не существует, он будет создан.
 
-        :param name: имя файла, если не задано, то будет использовано имя из атрибутов.
+        :param name: имя файла
         """
+        # Если не задано имя файла, то будет использовано имя из атрибутов
         if name is None:
             file_name = f'{self._title}.json'
         else:
             file_name = name
 
-        if os.path.exists(Path(FIXTURES, file_name)):
-            with open(Path(FIXTURES, file_name), 'w', encoding='utf-8') as f:
-                json.dump(self.info, f, ensure_ascii=False, indent=4)
-        else:
-            with open(Path(FIXTURES, file_name), 'a', encoding='utf-8') as f:
-                json.dump(self.info, f, ensure_ascii=False, indent=4)
+        # формирование пути к файлу
+        path_to_file = Path(FIXTURES, file_name)
+
+        # если файл не существует, то создать его, иначе переписать существующий
+        mode = 'w' if Path(path_to_file).is_file() else 'a'
+        with open(path_to_file, mode, encoding='utf-8') as f:
+            json.dump(self.info, f, ensure_ascii=False, indent=4)
