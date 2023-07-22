@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Переменные окружения
-API_KEY: str = os.getenv('YT_API_KEY')
+load_dotenv()
+API_KEY: str = os.environ.get('YT_API_KEY')
 
 # Пути дирректорий
 ROOT = Path(__file__).resolve().parent
