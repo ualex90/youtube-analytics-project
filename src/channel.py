@@ -22,7 +22,7 @@ class Channel:
         self.info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
         self._title = self.info['items'][0]['snippet']['title']
         self._description = self.info['items'][0]['snippet']['description']
-        self._url = self.info['items'][0]['snippet']['thumbnails']['default']['url']
+        self._url = f"https://www.youtube.com/channel/{self._channel_id}"
         self._subscribers = self.info['items'][0]['statistics']['subscriberCount']
         self._video_count = self.info['items'][0]['statistics']['videoCount']
         self._view_count = self.info['items'][0]['statistics']['viewCount']
@@ -88,3 +88,6 @@ class Channel:
         mode = 'w' if Path(path_to_file).is_file() else 'a'
         with open(path_to_file, mode, encoding='utf-8') as f:
             json.dump(self.info, f, ensure_ascii=False, indent=4)
+
+    def __str__(self):
+        return f"'{self.title} ({self.url})'"
