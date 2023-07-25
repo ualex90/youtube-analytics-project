@@ -23,9 +23,9 @@ class Channel:
         self._title = self.info['items'][0]['snippet']['title']
         self._description = self.info['items'][0]['snippet']['description']
         self._url = f"https://www.youtube.com/channel/{self._channel_id}"
-        self._subscribers = self.info['items'][0]['statistics']['subscriberCount']
-        self._video_count = self.info['items'][0]['statistics']['videoCount']
-        self._view_count = self.info['items'][0]['statistics']['viewCount']
+        self._subscribers = int(self.info['items'][0]['statistics']['subscriberCount'])
+        self._video_count = int(self.info['items'][0]['statistics']['videoCount'])
+        self._view_count = int(self.info['items'][0]['statistics']['viewCount'])
 
     @property
     def channel_id(self) -> str:
@@ -88,6 +88,27 @@ class Channel:
         mode = 'w' if Path(path_to_file).is_file() else 'a'
         with open(path_to_file, mode, encoding='utf-8') as f:
             json.dump(self.info, f, ensure_ascii=False, indent=4)
+
+    def __add__(self, other):
+        return self._subscribers + other.subscribers
+
+    def __sub__(self, other):
+        return self._subscribers - other.subscribers
+
+    def __gt__(self, other):
+        return self._subscribers > other.subscribers
+
+    def __ge__(self, other):
+        return self._subscribers >= other.subscribers
+
+    def __lt__(self, other):
+        return self._subscribers < other.subscribers
+
+    def __le__(self, other):
+        return self.subscribers <= other.subscribers
+
+    def __eq__(self, other):
+        return self._subscribers == other.subscribers
 
     def __str__(self):
         return f"'{self.title} ({self.url})'"
