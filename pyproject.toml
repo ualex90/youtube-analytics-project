@@ -10,6 +10,7 @@ packages = [{include = "youtube_analytics_project"}]
 python = "^3.11"
 google-api-python-client = "^2.94.0"
 pytest = "^7.4.0"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
