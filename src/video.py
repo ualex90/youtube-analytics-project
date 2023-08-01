@@ -14,6 +14,7 @@ class Video:
         self.__video_id = video_id
         self.info = self.youtube.videos().list(id=video_id, part='snippet,statistics').execute()
         self.title = self.info.get('items')[0].get('snippet').get('title')
+        self.url = f'https://www.youtube.com/watch?v={video_id}'
         self.viewCount = self.info.get('items')[0].get('statistics').get('viewCount')
         self.likeCount = self.info.get('items')[0].get('statistics').get('likeCount')
 
@@ -21,6 +22,18 @@ class Video:
     def video_id(self):
         return self.__video_id
 
+    def __str__(self):
+        return self.title
 
-video = Video('AWX4JnAnjBE')
-print(video.likeCount)
+
+class PLVideo(Video):
+    """
+    Класс для видео c информацией о плейлисте где оно находится
+    """
+    def __init__(self, video_id, pl_id):
+        super().__init__(video_id)
+        self.__pl_id = pl_id
+
+    @property
+    def pl_id(self):
+        return self.__pl_id
