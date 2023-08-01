@@ -20,12 +20,12 @@ class Channel:
         """
         self._channel_id = channel_id
         self.info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-        self._title = self.info['items'][0]['snippet']['title']
-        self._description = self.info['items'][0]['snippet']['description']
+        self.__title = self.info.get('items')[0].get('snippet').get('title')
+        self._description = self.info.get('items')[0].get('snippet').get('description')
         self._url = f"https://www.youtube.com/channel/{self._channel_id}"
-        self._subscribers = int(self.info['items'][0]['statistics']['subscriberCount'])
-        self._video_count = int(self.info['items'][0]['statistics']['videoCount'])
-        self._view_count = int(self.info['items'][0]['statistics']['viewCount'])
+        self._subscribers = int(self.info.get('items')[0].get('statistics').get('subscriberCount'))
+        self._video_count = int(self.info.get('items')[0].get('statistics').get('videoCount'))
+        self._view_count = int(self.info.get('items')[0].get('statistics').get('viewCount'))
 
     @property
     def channel_id(self) -> str:
@@ -33,7 +33,7 @@ class Channel:
 
     @property
     def title(self) -> str:
-        return self._title
+        return self.__title
 
     @property
     def description(self) -> str:
@@ -77,7 +77,7 @@ class Channel:
         """
         # Если не задано имя файла, то будет использовано имя из атрибутов
         if name is None:
-            file_name = f'{self._title}.json'
+            file_name = f'{self.__title}.json'
         else:
             file_name = name
 
