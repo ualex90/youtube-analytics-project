@@ -20,12 +20,12 @@ class Channel:
         """
         self._channel_id = channel_id
         self.info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-        self._title = self.info['items'][0]['snippet']['title']
-        self._description = self.info['items'][0]['snippet']['description']
+        self._title = self.info.get('items')[0].get('snippet').get('title')
+        self._description = self.info.get('items')[0].get('snippet').get('description')
         self._url = f"https://www.youtube.com/channel/{self._channel_id}"
-        self._subscribers = int(self.info['items'][0]['statistics']['subscriberCount'])
-        self._video_count = int(self.info['items'][0]['statistics']['videoCount'])
-        self._view_count = int(self.info['items'][0]['statistics']['viewCount'])
+        self._subscribers = int(self.info.get('items')[0].get('statistics').get('subscriberCount'))
+        self._video_count = int(self.info.get('items')[0].get('statistics').get('videoCount'))
+        self._view_count = int(self.info.get('items')[0].get('statistics').get('viewCount'))
 
     @property
     def channel_id(self) -> str:
