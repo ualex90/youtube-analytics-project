@@ -1,4 +1,4 @@
-import requests
+import datetime
 
 from src.channel import Channel
 from src.video import Video
@@ -11,6 +11,9 @@ class PlayList:
     youtube = Channel.get_service()
 
     def __init__(self, playlist_id: str) -> None:
+        """
+
+        """
         self.__pl_info = self.youtube.playlists().list(id=playlist_id, part='snippet').execute()
         self.__playlist_id = playlist_id
         self.title = self.__pl_info.get('items')[0].get('snippet').get('title')
@@ -27,13 +30,17 @@ class PlayList:
         return videos
 
     @property
-    def total_duration(self):
-        self.get_videos()
+    def total_duration(self) -> datetime.timedelta:
+        for video in self.get_videos():
+            pass
         return None
 
 
 if __name__ == '__main__':
     pl = PlayList('PLv_zOGKKxVpj-n2qLkEM2Hj96LO6uqgQw')
     print(pl.url)
-    x = pl.total_duration
 
+    duration = pl.total_duration
+    print(duration)  # "1:49:52"
+    print(isinstance(duration, datetime.timedelta))  # True
+    print(duration.total_seconds())  # 6592.0
