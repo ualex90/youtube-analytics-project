@@ -9,11 +9,12 @@ class Video:
 
     def __init__(self, video_id: str) -> None:
         self.__video_id = video_id
-        self.info = self.youtube.videos().list(id=video_id, part='snippet,statistics').execute()
-        self.title = self.info.get('items')[0].get('snippet').get('title')
-        self.url = f'https://www.youtube.com/watch?v={video_id}'
-        self.viewCount = self.info.get('items')[0].get('statistics').get('viewCount')
-        self.likeCount = self.info.get('items')[0].get('statistics').get('likeCount')
+        self.__info = self.youtube.videos().list(id=video_id, part='snippet, statistics, contentDetails').execute()
+        self.title = self.__info.get('items')[0].get('snippet').get('title')
+        self.url = f'https://youtu.be/{video_id}'
+        self.viewCount = self.__info.get('items')[0].get('statistics').get('viewCount')
+        self.likeCount = self.__info.get('items')[0].get('statistics').get('likeCount')
+        self.duration = self.__info.get('items')[0].get('contentDetails').get('duration')
 
     @property
     def video_id(self) -> str:

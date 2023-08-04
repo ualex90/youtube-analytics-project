@@ -18,18 +18,18 @@ class Channel:
         Экземпляр инициализируется id канала.
         Дальше все данные будут подтягиваться по API.
         """
-        self._channel_id = channel_id
-        self.info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-        self.__title = self.info.get('items')[0].get('snippet').get('title')
-        self._description = self.info.get('items')[0].get('snippet').get('description')
-        self._url = f"https://www.youtube.com/channel/{self._channel_id}"
-        self._subscribers = int(self.info.get('items')[0].get('statistics').get('subscriberCount'))
-        self._video_count = int(self.info.get('items')[0].get('statistics').get('videoCount'))
-        self._view_count = int(self.info.get('items')[0].get('statistics').get('viewCount'))
+        self.__channel_id = channel_id
+        self.__info = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
+        self.__title = self.__info.get('items')[0].get('snippet').get('title')
+        self._description = self.__info.get('items')[0].get('snippet').get('description')
+        self._url = f"https://www.youtube.com/channel/{self.__channel_id}"
+        self._subscribers = int(self.__info.get('items')[0].get('statistics').get('subscriberCount'))
+        self._video_count = int(self.__info.get('items')[0].get('statistics').get('videoCount'))
+        self._view_count = int(self.__info.get('items')[0].get('statistics').get('viewCount'))
 
     @property
     def channel_id(self) -> str:
-        return self._channel_id
+        return self.__channel_id
 
     @property
     def title(self) -> str:
@@ -59,7 +59,7 @@ class Channel:
         """
         Выводит в консоль информацию о канале.
         """
-        print(self.info)
+        print(self.__info)
 
     @classmethod
     def get_service(cls):
@@ -87,7 +87,7 @@ class Channel:
         # если файл не существует, то создать его, иначе переписать существующий
         mode = 'w' if Path(path_to_file).is_file() else 'a'
         with open(path_to_file, mode, encoding='utf-8') as f:
-            json.dump(self.info, f, ensure_ascii=False, indent=4)
+            json.dump(self.__info, f, ensure_ascii=False, indent=4)
 
     def __add__(self, other):
         return self._subscribers + other.subscribers
