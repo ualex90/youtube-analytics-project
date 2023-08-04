@@ -24,10 +24,8 @@ class PlayList:
         """
         "достает" видео из плейлиста и складывает объекты в список
         """
-        videos: list[Video] = list()
         pl_items_info = self.youtube.playlistItems().list(playlistId=self.__playlist_id, part='snippet').execute()
-        for item in pl_items_info.get('items'):
-            videos.append(Video(item.get('snippet').get('resourceId').get("videoId")))
+        videos = [Video(i.get('snippet').get('resourceId').get("videoId")) for i in pl_items_info.get('items')]
         return videos
 
     @staticmethod
@@ -60,4 +58,3 @@ class PlayList:
         """
         best_url = max(self.get_videos(), key=lambda x: x.likeCount).url
         return best_url
-
