@@ -1,4 +1,5 @@
-import datetime
+from datetime import timedelta
+import re
 
 from src.channel import Channel
 from src.video import Video
@@ -12,7 +13,7 @@ class PlayList:
 
     def __init__(self, playlist_id: str) -> None:
         """
-
+        Инициализация плейлиста
         """
         self.__pl_info = self.youtube.playlists().list(id=playlist_id, part='snippet').execute()
         self.__playlist_id = playlist_id
@@ -21,7 +22,7 @@ class PlayList:
 
     def get_videos(self) -> list[Video]:
         """
-        Метод "достает" видео из плейлиста и складывает объекты в список
+        "достает" видео из плейлиста и складывает объекты в список
         """
         videos: list[Video] = list()
         pl_items_info = self.youtube.playlistItems().list(playlistId=self.__playlist_id, part='snippet').execute()
@@ -29,18 +30,34 @@ class PlayList:
             videos.append(Video(item.get('snippet').get('resourceId').get("videoId")))
         return videos
 
+    @staticmethod
+    def duration_to_dict(video_duration) -> dict:
+        """
+        Преобразует длительность видео с youtube
+        в формате PT#H#M#S в словарь
+        """
+        match = re.match('PT((\d+)H)?((\d+)M)?((\d+)S)?', video_duration).groups()
+        duration_dict = {
+            'hours': int(match[1]) if match[1] else 0,
+            'minutes': int(match[3]) if match[3] else 0,
+            'seconds': int(match[5]) if match[5] else 0
+        }
+        return duration_dict
+
     @property
-    def total_duration(self) -> datetime.timedelta:
+    def total_duration(self) -> timedelta:
+        """
+        Возвращает объект класса datetime.timedelta с суммарной длительность плейлиста
+        """
+        total = {'hours': 0, 'minutes': 0, 'seconds': 0}
         for video in self.get_videos():
-            pass
-        return None
+            total = {v: (total.get(v) + k) for (v, k) in self.duration_to_dict(video.duration).items()}
+        return timedelta(**total)
 
+    def show_best_video(self) -> str:
+        """
+        возвращает ссылку на самое популярное видео из плейлиста (по количеству лайков)
+        """
+        best_url = max(self.get_videos(), key=lambda x: x.likeCount).url
+        return best_url
 
-if __name__ == '__main__':
-    pl = PlayList('PLv_zOGKKxVpj-n2qLkEM2Hj96LO6uqgQw')
-    print(pl.url)
-
-    duration = pl.total_duration
-    print(duration)  # "1:49:52"
-    print(isinstance(duration, datetime.timedelta))  # True
-    print(duration.total_seconds())  # 6592.0
