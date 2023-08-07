@@ -9,12 +9,28 @@ class Video:
 
     def __init__(self, video_id: str) -> None:
         self.__video_id = video_id
-        self.__info = self.youtube.videos().list(id=video_id, part='snippet, statistics, contentDetails').execute()
-        self.title = self.__info.get('items')[0].get('snippet').get('title')
-        self.url = f'https://youtu.be/{video_id}'
-        self.viewCount = self.__info.get('items')[0].get('statistics').get('viewCount')
-        self.likeCount = self.__info.get('items')[0].get('statistics').get('likeCount')
-        self.duration = self.__info.get('items')[0].get('contentDetails').get('duration')
+        self.title = None
+        self.url = None
+        self.view_count = None
+        self.like_count = None
+        self.duration = None
+        self._get_info(video_id)
+
+    def _get_info(self, video_id):
+        """
+        Получение информации о видео
+        """
+        try:
+            info = self.youtube.videos().list(id=video_id, part='snippet, statistics, contentDetails').execute()
+            item = info.get('items')[0]
+        except IndexError:
+            pass
+        else:
+            self.title = item.get('snippet').get('title')
+            self.url = f'https://youtu.be/{video_id}'
+            self.view_count = item.get('statistics').get('viewCount')
+            self.like_count = item.get('statistics').get('likeCount')
+            self.duration = item.get('contentDetails').get('duration')
 
     @property
     def video_id(self) -> str:
